@@ -3,17 +3,38 @@
     <h1>Welcome to {{ title }}!</h1>
     <!-- title 데이터가 html 엘리먼트 안에 바인딩 됨 -->
     <input type="text" v-model="input1" />
-    <!-- vue.js에서 html엘리먼트의 value에 해당하는 부분은 v-model을 이용해 데이터를 바인딩하고 처리할 수 있음 -->
+    <!-- vue.js에서 html엘리먼트의 value에 해당하는 부분은 v-model을 이용해 데이터 바인딩 처리 -->
     <!-- two-way 바인딩 방식임 -> 화면에서 사용자가 input의 value값을 바꾸면 동시에   cf)one-way:단방향으로 데이터를 넣어주면 끝남  -->
     <button type="button" @click="getData">Get</button>
     <!-- vue.js에서는 onclick이 아닌 @click 으로 이벤트 바인딩  -->
     <button type="button" @click="setData">Set</button>
 
-    <select class="form-control">
+    <select class="form-control" v-model="region" @change="changeRegion">
       <option :key="i" :value="d.v" v-for="(d, i) in options">{{ d.t }}</option>
+      <!-- 배열형태의 데이터를 처리할 때는 v-for이용 -->
       <!--v-for를 통해 options라는 배열형식 데이터에 접근해 for문을 돌리면서 
        요소 하나하나마다 순차적으로 데이터와 인덱스를 가져옴 -->
+      <!-- html코드안에서 데이터에 접근할 때는 {{data}} 형식을 따르고, 
+       엘리먼트 안의 attribute에서 적용할 때는 :(콜론)을 사용하여 데이터 변수에 접근함 :value="d.v" -->
     </select>
+
+    <!-- <table class="table table-bordered" v-if="tableShow" > -->
+    <!-- v-if 조건이 만족되면 현재 엘리먼트를 렌더링 하겠다는 속성 -->
+    <table class="table table-bordered" v-show="tableShow">
+      <!-- v-show는 조건의 만족여부에 상관없이 무조건 렌더링을 하지만, 스타일을 통해 단지 화면에 보이지 않게할 뿐 
+    display:none, visivility:hid 같은 개념 
+    v-if는 조건이 만족하지 않으면 렌더링조차 하지 않음
+    화면에서 무언가 보였다 안보였다를 자주해야할 때 v-if를 사용할 경우 
+    렌더링과 렌더링자체를 삭제하는 행위에 리소스가 많이 낭비됨 
+    따라서 화면에 보이고안보이고를 자주하는 경우 v-show를 사용이 유리함 
+    반대로, 특정 조건에 이르렀을 때만 화면에 보여 사용자가 그 액션을 할 지 안할지 모를 때 
+    v-if를 통해 일단 렌더링을 하지 않는 게 초기렌더링 시 리소스를 아낄 수 있음  -->
+
+      <tr :key="i" v-for="(d, i) in options">
+        <td>{{ d.v }}</td>
+        <td>{{ d.t }}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -31,6 +52,8 @@ export default {
         { v: "J", t: "Jeju" },
         { v: "B", t: "Busan" },
       ],
+      region: "B",
+      tableShow: false,
     };
   },
   watch: {
@@ -49,6 +72,9 @@ export default {
     },
     setData() {
       this.input1 = "12345";
+    },
+    changeRegion() {
+      alert(this.region);
     },
   },
 
